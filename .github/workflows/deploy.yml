@@ -17,6 +17,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'  # Specify your Java version
+          distribution: 'adopt'
 
       - name: Build Project with Gradle
         run: ./gradlew clean build  # Adjust if using Maven or another build tool
