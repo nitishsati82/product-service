@@ -1,11 +1,11 @@
 ARG REGISTRY=""
-FROM amazoncorretto:17
+FROM openjdk:17-jdk-slim
 
 
 ENV PROJECT_NAME=productservice
 ENV PROJECT_VERSION=0.0.1-SNAPSHOT
 
-COPY build/libs/${PROJECT_NAME}-${PROJECT_VERSION}.jar app.jar
+COPY build/libs/${PROJECT_NAME}-${PROJECT_VERSION}.jar productservice.jar
 
 EXPOSE 8080
 
