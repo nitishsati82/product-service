@@ -1,49 +1,45 @@
-name: Deploy Java App to AWS EC2
+name: AWS EC2 Deploment
 
 on:
   push:
-    branches:
-      - main  # Trigger deployment on push to the main branch
+    branches: [ "main" ]
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
+  build:
+    runs-on: [ubuntu-latest]
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-
-      - name: Set Up Java
-        uses: actions/setup-java@v2
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
         with:
-          java-version: '17'  # Specify your Java version
-          distribution: 'adopt'
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Build with Maven
+        run: mvn clean install -DskipTests
+      - name: Login to docker hub
+        run: docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" -p "${{ secrets.DOCKER_HUB_PASSWORD }}"
+      - name: Build docker image
+        run: docker build -t nitishsati8/product-service
+      - name: Push docker image
+        run: docker push nitishsati8/product-service:latest
 
-      - name: Build Project with Gradle
-        run: gradle clean build  # Adjust if using Maven or another build tool
-
-      - name: Create SSH Directory
-        run: mkdir -p ~/.ssh
-
-      - name: Set SSH Directory Permissions
-        run: chmod 700 ~/.ssh
-
-      - name: Add EC2 Host to Known Hosts
+  deploy:
+    needs: build
+    runs-on: ip-172-31-15-119
+    steps:
+      - name: Check Docker Installation
         run: |
-            ssh-keyscan -H ${{ secrets.AWS_HOST }} >> ~/.ssh/known_hosts
-            chmod 644 ~/.ssh/known_hosts
-
-            - name: Prepare SSH Key
-              run: |
-                echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ~/.ssh/ec2_key.pem
-                chmod 600 ~/.ssh/ec2_key.pem
-
-      - name: Deploy to EC2
+          if ! [ -x "$(command -v docker)" ]; then
+            echo "Error: Docker is not installed." >&2
+            exit 1
+          fi
+      - name: Pull image from docker hub
+        run: sudo docker pull nitishsati8/product-service:latest
+      - name: Delete existing container
         run: |
-            scp -i ~/.ssh/ec2_key.pem build/libs/*.jar ${{ secrets.AWS_USER }}@${{ secrets.AWS_HOST }}:~/productservice.jar
-            ssh -i ~/.ssh/ec2_key.pem ${{ secrets.AWS_USER }}@${{ secrets.AWS_HOST }} << 'EOF'
-              if pgrep -f 'java -jar productservice.jar'; then
-                pkill -f 'java -jar productservice.jar'
-              fi
-              nohup java -jar ~/productservice.jar > app.log 2>&1 &
-            EOF
+          if [ "$(sudo docker ps -aq -f name=demo)" ]; then
+            sudo docker rm -f demo
+          fi
+      - name: Run docker container
+        run: sudo docker run -d -p 8080:8080 --name demo nitishsati8/product-service
