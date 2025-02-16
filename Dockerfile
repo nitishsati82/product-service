@@ -1,5 +1,5 @@
 ARG REGISTRY=""
-FROM openjdk:17-jdk-slim
+FROM amazoncorretto:17
 
 
 ENV PROJECT_NAME=productservice
