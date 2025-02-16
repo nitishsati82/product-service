@@ -26,7 +26,7 @@ jobs:
         run: |
           echo "${{ secrets.AWS_SSH_KEY }}" > private_key.pem
           chmod 600 private_key.pem
-          scp -i private_key.pem target/*.jar ${{ secrets.AWS_USER }}@${{ secrets.AWS_HOST }}:~/app.jar
+          scp -i private_key.pem build/libs/*.jar ${{ secrets.AWS_USER }}@${{ secrets.AWS_HOST }}:~/app.jar
 
       - name: Restart Application on EC2
         run: |
