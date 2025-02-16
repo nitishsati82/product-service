@@ -20,7 +20,7 @@ jobs:
       - name: Login to docker hub
         run: docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" -p "${{ secrets.DOCKER_HUB_PASSWORD }}"
       - name: Build docker image
-        run: docker build -t nitishsati8/product-service
+        run: docker build -t nitishsati8/product-service:latest .
       - name: Push docker image
         run: docker push nitishsati8/product-service:latest
 
