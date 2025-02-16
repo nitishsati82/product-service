@@ -31,12 +31,14 @@ jobs:
 
       - name: Upload JAR to EC2
         run: |
-          echo "${{ secrets.AWS_SSH_KEY }}" > private_key.pem
+          echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" | tr -d '\r' > private_key.pem
           chmod 600 private_key.pem
           scp -i private_key.pem build/libs/*.jar ${{ secrets.AWS_USER }}@${{ secrets.AWS_HOST }}:~/app.jar
 
       - name: Restart Application on EC2
         run: |
+          echo "${{ secrets.EC2_SSH_PRIVATE_KEY  }}" | tr -d '\r' > private_key.pem
+          chmod 600 private_key.pem
           ssh -i private_key.pem ${{ secrets.AWS_USER }}@${{ secrets.AWS_HOST }} << 'EOF'
             # Kill existing application process
             PID=$(pgrep -f 'java -jar app.jar')
