@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: product-service
+  data:
+    mongodb:
+      uri: mongodb+srv://nitishsati:9IRkVBA29ASadFMa@cluster0.s3fu3.mongodb.net/productdb
+
+
