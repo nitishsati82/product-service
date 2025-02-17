@@ -6,3 +6,9 @@ spring:
       uri: mongodb+srv://nitishsati:9IRkVBA29ASadFMa@cluster0.s3fu3.mongodb.net/productdb
 
 
+
+server:
+  port: 8082
+  servlet:
+    context-path: /product
+
