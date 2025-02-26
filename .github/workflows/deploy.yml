@@ -38,8 +38,8 @@ jobs:
         run: sudo docker pull nitishsati8/product-service:latest
       - name: Delete existing container
         run: |
-          if [ "$(sudo docker ps -aq -f name=demo)" ]; then
-            sudo docker rm -f demo
+          if [ "$(sudo docker ps -aq -f name=productservice)" ]; then
+            sudo docker rm -f productservice
           fi
       - name: Run docker container
         run: sudo docker run -d -p 8081:8081 --name productservice nitishsati8/product-service
