@@ -12,7 +12,10 @@ public class WebConfig {
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.addAllowedOrigin("http://localhost:3000,http://localhost:8080,http://13.200.154.116:8083,http://13.235.208.227:80"); // Allow requests from your React app
+        corsConfiguration.addAllowedOrigin("http://13.235.208.227:80");
+        corsConfiguration.addAllowedOrigin("http://localhost:3000");
+        corsConfiguration.addAllowedOrigin("http://localhost:8080");
+        corsConfiguration.addAllowedOrigin("http://13.200.154.116:8083");
         corsConfiguration.addAllowedHeader("*"); // Allow all headers
         corsConfiguration.addAllowedMethod("*"); // Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
         corsConfiguration.setAllowCredentials(true); // Allow cookies if needed
