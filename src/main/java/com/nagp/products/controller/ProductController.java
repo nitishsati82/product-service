@@ -57,7 +57,7 @@ public class ProductController {
         List<Product> products = new ArrayList<>();
         for (int i = 1; i <= 15; i++) {
             Product product = Product.builder().id(i).
-                    imgUrl("https://via.placeholder.com/150?text=Product+" + i).
+                    imgUrl("https://ecomm-nagp-bucket.s3.ap-south-1.amazonaws.com/"+i+".jpeg").
                     name("Product " + i).
                     price((double) Math.min(100, 1000)).
                     description("This is a description for Product " + i).
