@@ -48,4 +48,4 @@ jobs:
           -e OPEN_SEARCH_HOST="${{ secrets.OPEN_SEARCH_HOST }}" \
           -e OPEN_SEARCH_USER="${{ secrets.OPEN_SEARCH_USER }}" \
           -e OPEN_SEARCH_PASSWORD="${{ secrets.OPEN_SEARCH_PASSWORD }}" \
-          nitishsati8/product-service:latest
+          nitishsati8/product-service:latest  
