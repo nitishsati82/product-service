@@ -42,4 +42,10 @@ jobs:
             sudo docker rm -f productservice
           fi
       - name: Run docker container
-        run: sudo docker run -d -p 8081:8081 --name productservice nitishsati8/product-service
+        run: sudo docker run -d -p 8081:8081 --name productservice \
+          -e AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}" \
+          -e AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
+          -e OPEN_SEARCH_HOST="${{ secrets.OPEN_SEARCH_HOST }}" \
+          -e OPEN_SEARCH_USER="${{ secrets.OPEN_SEARCH_USER }}" \
+          -e OPEN_SEARCH_PASSWORD="${{ secrets.OPEN_SEARCH_PASSWORD }}" \
+          nitishsati8/product-service
