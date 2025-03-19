@@ -41,6 +41,20 @@ jobs:
           if [ "$(sudo docker ps -aq -f name=productservice)" ]; then
             sudo docker rm -f productservice
           fi
+      - name: Debug Environment Variables
+        run: |
+          echo "AWS_ACCESS_KEY_ID Length: ${#AWS_ACCESS_KEY_ID}"
+          echo "AWS_SECRET_ACCESS_KEY Length: ${#AWS_SECRET_ACCESS_KEY}"
+          echo "OPEN_SEARCH_HOST Length: ${#OPEN_SEARCH_HOST}"
+          echo "OPEN_SEARCH_USER Length: ${#OPEN_SEARCH_USER}"
+          echo "OPEN_SEARCH_PASSWORD Length: ${#OPEN_SEARCH_PASSWORD}"
+        env:
+          AWS_ACCESS_KEY_ID: "${{ secrets.AWS_ACCESS_KEY_ID }}"
+          AWS_SECRET_ACCESS_KEY: "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+          OPEN_SEARCH_HOST: "${{ secrets.OPEN_SEARCH_HOST }}"
+          OPEN_SEARCH_USER: "${{ secrets.OPEN_SEARCH_USER }}"
+          OPEN_SEARCH_PASSWORD: "${{ secrets.OPEN_SEARCH_PASSWORD }}"
+            
       - name: Run docker container
         run: sudo docker run -d -p 8081:8081 --name productservice \
           -e AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}" \
@@ -48,4 +62,4 @@ jobs:
           -e OPEN_SEARCH_HOST="${{ secrets.OPEN_SEARCH_HOST }}" \
           -e OPEN_SEARCH_USER="${{ secrets.OPEN_SEARCH_USER }}" \
           -e OPEN_SEARCH_PASSWORD="${{ secrets.OPEN_SEARCH_PASSWORD }}" \
-          nitishsati8/product-service:latest  
+          nitishsati8/product-service:latest
