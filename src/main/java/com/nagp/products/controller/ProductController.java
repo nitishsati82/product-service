@@ -6,7 +6,6 @@ import com.nagp.products.service.ProductService;
 import com.nagp.products.service.SearchService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,10 +28,7 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @Value("aws-secret.open-search-host")
-    private String OPENSEARCH_HOST;
-
-    @Autowired
+   @Autowired
     private SearchService searchProducts;
     @GetMapping
     public ResponseEntity<Map<String, Object>> getProducts(
@@ -45,7 +41,6 @@ public class ProductController {
         Map<String, Object> response = new HashMap<>();
         response.put("products", paginatedProducts);
         response.put("totalPages", (int) Math.ceil((double) products.size() / size));
-        log.info("open search host::"+OPENSEARCH_HOST);
         return ResponseEntity.ok(response);
     }
 
