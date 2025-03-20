@@ -8,25 +8,23 @@ import org.opensearch.client.opensearch.OpenSearchClient;
 import org.opensearch.client.transport.rest_client.RestClientTransport;
 import org.opensearch.client.RestClient;
 import org.opensearch.client.json.jackson.JacksonJsonpMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class OpenSearchConfig {
-    @Value("aws-secret.open-search-host")
-    private String OPENSEARCH_HOST;
-    @Value("aws-secret.open-search-user")
-    private String USERNAME;
-    @Value("aws-secret.open-search-password")
-    private String PASSWORD;
+
+    @Autowired
+    private OpenSearchFieldConfig openSearchFieldConfig;
 
     @Bean
     public OpenSearchClient openSearchClient() {
         BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-        credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(USERNAME, PASSWORD));
+        credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(openSearchFieldConfig.getUser(), openSearchFieldConfig.getPassword()));
 
-        RestClient restClient = RestClient.builder(new HttpHost(OPENSEARCH_HOST, 443, "https"))
+        RestClient restClient = RestClient.builder(new HttpHost(openSearchFieldConfig.getHost(), 443, "https"))
                 .setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider))
                 .build();
 

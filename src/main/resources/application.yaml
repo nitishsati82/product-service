@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: local
   application:
     name: product-service
   data:
@@ -13,9 +15,11 @@ server:
 aws-secret:
   access-key: ${AWS_ACCESS_KEY_ID}
   access-key-id: ${AWS_SECRET_ACCESS_KEY}
-  open-search-host: ${OPEN_SEARCH_HOST}
-  open-search-user: ${OPEN_SEARCH_USER}
-  open-search-password: ${OPEN_SEARCH_PASSWORD}
+
+open-search-config:
+  host: ${OPEN_SEARCH_HOST}
+  user: ${OPEN_SEARCH_USER}
+  password: ${OPEN_SEARCH_PASSWORD}
 
 service-integration:
   inventory-service-url: localhost:8080/inventory
