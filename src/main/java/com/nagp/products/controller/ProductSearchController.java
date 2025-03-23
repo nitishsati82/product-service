@@ -1,5 +1,6 @@
 package com.nagp.products.controller;
 
+import com.nagp.products.model.dto.response.ProductResDto;
 import com.nagp.products.model.entity.Product;
 import com.nagp.products.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class ProductSearchController {
     private SearchService searchProducts;
 
     @GetMapping("/search")
-    public List<Product> searchProducts(@RequestParam String query) {
+    public List<ProductResDto> searchProducts(@RequestParam String query) {
         return searchProducts.searchProducts(query);
     }
 }

@@ -1,8 +1,10 @@
 spring:
-  profiles:
-    active: local
   application:
     name: product-service
+  elasticsearch:
+    uris: ${ELASTIC_URI}
+    username: ${ELASTIC_USER_NAME}
+    password: ${ELASTIC_PASSWORD}
   data:
     mongodb:
       uri: mongodb+srv://nitishsati:9IRkVBA29ASadFMa@cluster0.s3fu3.mongodb.net/productdb
@@ -15,11 +17,6 @@ server:
 aws-secret:
   access-key: ${AWS_ACCESS_KEY_ID}
   access-key-id: ${AWS_SECRET_ACCESS_KEY}
-
-open-search-config:
-  host: ${OPEN_SEARCH_HOST}
-  user: ${OPEN_SEARCH_USER}
-  password: ${OPEN_SEARCH_PASSWORD}
 
 service-integration:
   inventory-service-url: localhost:8080/inventory

@@ -79,7 +79,7 @@ public class ProductController {
                 throw  new ResponseStatusException(HttpStatus.BAD_REQUEST,"Product image is missing!");
             }
             Product addedProduct = productService.addProduct(product, image);
-            searchProducts.indexProduct(addedProduct);
+            searchProducts.saveElasticProduct(addedProduct);
             return ResponseEntity.ok(addedProduct);
         }else{
             if(Objects.isNull(id)){

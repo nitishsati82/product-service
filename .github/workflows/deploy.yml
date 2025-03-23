@@ -45,8 +45,8 @@ jobs:
         run: |
           echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
           echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
-          echo "OPEN_SEARCH_HOST=${{ secrets.OPEN_SEARCH_HOST }}" >> $GITHUB_ENV
-          echo "OPEN_SEARCH_USER=${{ secrets.OPEN_SEARCH_USER }}" >> $GITHUB_ENV
+          echo "ELASTIC_URI=${{ secrets.ELASTIC_URI }}" >> $GITHUB_ENV
+          echo "ELASTIC_USER_NAME=${{ secrets.ELASTIC_USER_NAME }}" >> $GITHUB_ENV
           echo "OPEN_SEARCH_PASSWORD=${{ secrets.OPEN_SEARCH_PASSWORD }}" >> $GITHUB_ENV
       - name: Use secret in a step
         run: |
@@ -56,7 +56,7 @@ jobs:
           sudo docker run -d -p 8081:8081 --name productservice \
           -e "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" \
           -e "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
-          -e "OPEN_SEARCH_HOST=${{ secrets.OPEN_SEARCH_HOST }}" \
-          -e "OPEN_SEARCH_USER=${{ secrets.OPEN_SEARCH_USER }}" \
-          -e "OPEN_SEARCH_PASSWORD=${{ secrets.OPEN_SEARCH_PASSWORD }}" \
+          -e "ELASTIC_URI=${{ secrets.ELASTIC_URI }}" \
+          -e "ELASTIC_USER_NAME=${{ secrets.ELASTIC_USER_NAME }}" \
+          -e "ELASTIC_PASSWORD=${{ secrets.ELASTIC_PASSWORD }}" \
           nitishsati8/product-service:latest

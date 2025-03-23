@@ -10,10 +10,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductResDto {
-    private Integer id;
+    private String id;
     private String imgUrl;
     private String name;
     private double price;
     private String description;
+    private String category;
     private int quantity;
+    private String sellerId;
 }

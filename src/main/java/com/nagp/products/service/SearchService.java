@@ -1,17 +1,20 @@
 package com.nagp.products.service;
 
+import com.nagp.products.mapper.ProductMapper;
+import com.nagp.products.model.dto.response.ProductResDto;
 import com.nagp.products.model.entity.Product;
+import com.nagp.products.model.entity.elk.ElkProduct;
+import com.nagp.products.repository.elastic.ElkProductRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.opensearch.client.opensearch.OpenSearchClient;
-import org.opensearch.client.opensearch.core.IndexRequest;
-import org.opensearch.client.opensearch.core.IndexResponse;
-import org.opensearch.client.opensearch.core.SearchRequest;
-import org.opensearch.client.opensearch.core.SearchResponse;
-import org.opensearch.client.opensearch.core.search.Hit;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.SearchHit;
+import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.query.Criteria;
+import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -19,61 +22,56 @@ import java.util.List;
 @AllArgsConstructor
 public class SearchService {
 
-     private final OpenSearchClient openSearchClient;
+    @Autowired
+    private ElkProductRepository elkProductRepository;
 
-    public void testConnection() {
-        try {
-            var response = openSearchClient.info();
-            System.out.println("Connected to OpenSearch: " + response.version().distribution());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    @Autowired
+    private com.nagp.products.repository.ProductRepository mongoRepo;
+
+    @Autowired
+    private ElasticsearchTemplate elasticsearchRestTemplate;
+
+    public void saveElasticProduct(Product product) {
+        elkProductRepository.save(ProductMapper.toElkProduct(product));
     }
 
-    public void indexProduct(Product product) {
-        try {
-            // Create an Index Request
-            IndexRequest<Product> request = IndexRequest.of(i -> i
-                    .index("products")  // Index name
-                    .id(product.getId())  // Document ID
-                    .document(product)   // Document to be indexed
-            );
+    public List<ProductResDto> searchProducts(String query) {
 
-            // Execute the request
-            IndexResponse response = openSearchClient.index(request);
-            log.info("Indexed product with ID: {}, Status: {}", response.id(), response.result());
+        List<ElkProduct> esResults = searchElasticsearch(query);
 
-        } catch (Exception e) {
-            log.error("Exception while indexing product: ", e);
-        }
+        // If not found in Elasticsearch, fallback to MongoDB
+        if (esResults.isEmpty()) {
+            List<Product> mongoResults = searchMongoDB(query);
 
-    }
-
-    public List<Product> searchProducts(String query)  {
-        try {
-            SearchRequest request = SearchRequest.of(s -> s
-                    .index("products")
-                    .query(q -> q.multiMatch(m -> m
-                            .fields("name^3", "category^2", "description")  // Boosting "name" (higher weight)
-                            .query(query)
-                    ))
-            );
-
-
-            // Execute search
-            SearchResponse<Product> response = openSearchClient.search(request, Product.class);
-
-            // Parse results
-            List<Product> products = response.hits().hits().stream()
-                    .map(Hit::source)  // Extract product objects
+            // Save to Elasticsearch for future searches
+            List<ElkProduct> elkProducts = mongoResults.stream()
+                    .map(ProductMapper::toElkProduct)
                     .toList();
+            elkProductRepository.saveAll(elkProducts);
 
-            log.info("Found {} products for query '{}'", products.size(), query);
-            return products;
-        }catch (Exception ex){
-            log.error("error"+ex);
+            return mongoResults.stream()
+                    .map(ProductMapper::toProductResDto)
+                    .toList();
         }
-        return Collections.emptyList();
+
+        return esResults.stream()
+                .map(ProductMapper::toProductResDto)
+                .toList();
     }
+
+    private List<ElkProduct> searchElasticsearch(String query) {
+        Criteria criteria = new Criteria("name").fuzzy(query)
+                .or(new Criteria("description").fuzzy(query))
+                .or(new Criteria("category").fuzzy(query));
+
+        CriteriaQuery criteriaQuery = new CriteriaQuery(criteria);
+        SearchHits<ElkProduct> searchHits = elasticsearchRestTemplate.search(criteriaQuery, ElkProduct.class);
+        return searchHits.stream().map(SearchHit::getContent).toList();
+    }
+
+    private List<Product> searchMongoDB(String query) {
+        return mongoRepo.findByNameContainingOrDescriptionContainingOrCategoryContaining(query, query, query);
+    }
+
 
 }

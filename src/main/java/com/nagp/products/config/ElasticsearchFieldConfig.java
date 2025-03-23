@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix = "open-search-config")
 @Data
-public class OpenSearchFieldConfig {
+public class ElasticsearchFieldConfig {
     private String host;
     private String user;
     private String password;
