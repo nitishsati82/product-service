@@ -53,7 +53,7 @@ jobs:
           echo "The secret hostname is ${{ secrets.OPEN_SEARCH_HOST }}"
       - name: Run docker container
         run: |
-          sudo docker run -d -p 8081:8081 --name productservice \
+          sudo docker run -d -p 8090:8090 --name productservice \
           -e "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" \
           -e "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
           -e "ELASTIC_URI=${{ secrets.ELASTIC_URI }}" \
