@@ -1,7 +1,10 @@
 package com.nagp.products.service.impl;
 
+import com.nagp.products.config.S3Config;
 import com.nagp.products.service.S3Service;
 import jakarta.annotation.PostConstruct;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,12 +22,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
 @Service
+//@AllArgsConstructor
 public class S3ServiceImpl implements S3Service {
-    @Value("aws-secret.access-key")
+    //@Value("aws-secret.access-key")
     private String awsAccessKeyId;
 
-    @Value("aws-secret.access-key-id")
+    //@Value("aws-secret.access-key-id")
     private String awsSecretAccessKey;
+    @Autowired
+    S3Config s3Config;
 
     private String bucketName="ecomm-nagp-bucket";
 
@@ -32,7 +38,8 @@ public class S3ServiceImpl implements S3Service {
 
     @PostConstruct
     public void init() {
-        AwsBasicCredentials awsCredentials = AwsBasicCredentials.create(awsAccessKeyId, awsSecretAccessKey);
+        //System.setProperty("aws.profile", "s3-user");
+        AwsBasicCredentials awsCredentials = AwsBasicCredentials.create(s3Config.getAccessKeyId(), s3Config.getAccessKey());
         s3Client = S3Client.builder()
                 .region(Region.AP_SOUTH_1)  // Replace with your AWS region
                 .credentialsProvider(StaticCredentialsProvider.create(awsCredentials))

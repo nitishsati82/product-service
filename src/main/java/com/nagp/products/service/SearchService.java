@@ -15,6 +15,7 @@ import org.springframework.data.elasticsearch.core.query.Criteria;
 import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -60,9 +61,30 @@ public class SearchService {
     }
 
     private List<ElkProduct> searchElasticsearch(String query) {
-        Criteria criteria = new Criteria("name").fuzzy(query)
-                .or(new Criteria("description").fuzzy(query))
-                .or(new Criteria("category").fuzzy(query));
+        String[] keywords = query.split("\\s+"); // Splitting by spaces
+
+        // Create an OR condition for all keywords across all fields
+        Criteria criteria = null;
+
+        for (String keyword : keywords) {
+            Criteria keywordCriteria = new Criteria()
+                    .or(new Criteria("name").matches(keyword))
+                    .or(new Criteria("description").matches(keyword))
+                    .or(new Criteria("category").matches(keyword))
+                    .or(new Criteria("brand").matches(keyword));
+
+            // Combine all keywordCriteria using OR
+            if (criteria == null) {
+                criteria = keywordCriteria; // First keyword sets the base
+            } else {
+                criteria = criteria.or(keywordCriteria); // Add OR condition for more keywords
+            }
+        }
+
+        if (criteria == null) {
+            return new ArrayList<>(); // Return empty list if no valid criteria
+        }
+
 
         CriteriaQuery criteriaQuery = new CriteriaQuery(criteria);
         SearchHits<ElkProduct> searchHits = elasticsearchRestTemplate.search(criteriaQuery, ElkProduct.class);
@@ -70,7 +92,7 @@ public class SearchService {
     }
 
     private List<Product> searchMongoDB(String query) {
-        return mongoRepo.findByNameContainingOrDescriptionContainingOrCategoryContaining(query, query, query);
+        return mongoRepo.findByNameContainingOrDescriptionContainingOrCategoryContainingOrBrandContaining(query, query, query,query);
     }
 
 

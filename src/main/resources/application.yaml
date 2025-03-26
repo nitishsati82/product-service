@@ -15,8 +15,8 @@ server:
     context-path: /product
 
 aws-secret:
-  access-key: ${AWS_ACCESS_KEY_ID}
-  access-key-id: ${AWS_SECRET_ACCESS_KEY}
+  access-key: ${AWS_SECRET_ACCESS_KEY}
+  access-key-id: ${AWS_ACCESS_KEY_ID}
 
 service-integration:
   inventory-service-url: localhost:8080/inventory

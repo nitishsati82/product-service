@@ -8,6 +8,6 @@ import java.util.List;
 public interface ProductRepository extends MongoRepository<Product, String> {
 
     List<Product> findAllBySellerId(String sellerId);
-    List<Product> findByNameContainingOrDescriptionContainingOrCategoryContaining(String name, String description, String category);
+    List<Product> findByNameContainingOrDescriptionContainingOrCategoryContainingOrBrandContaining(String name, String description, String category,String brand);
 
 }

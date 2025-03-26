@@ -12,10 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/products")
@@ -33,8 +30,15 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<Map<String, Object>> getProducts(
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "15") int size) {
+            @RequestParam(defaultValue = "15") int size,@RequestParam(defaultValue = "asc") String sort) {
         List<Product> products = productService.findAll();
+
+        if ("desc".equalsIgnoreCase(sort)) {
+            products.sort(Comparator.comparing(Product::getPrice).reversed()); // Sort descending
+        } else {
+            products.sort(Comparator.comparing(Product::getPrice)); // Sort ascending
+        }
+
         int start = (page - 1) * size;
         int end = Math.min(start + size, products.size());
         List<Product> paginatedProducts = products.subList(start, end);
@@ -61,6 +65,9 @@ public class ProductController {
     @PostMapping("/add-update")
     public ResponseEntity<Product> addProduct(@RequestParam("name") String name,
                                              @RequestParam("price") double price,
+                                              @RequestParam("brand") String brand,
+                                              @RequestParam("discountPrice") double discountPrice,
+                                              @RequestParam("discount") double discount,
                                              @RequestParam("description") String description,
                                              @RequestParam("category") String category,
                                              @RequestParam("sellerId") String sellerId,
@@ -70,10 +77,13 @@ public class ProductController {
         Product product = new Product();
         product.setId(id);
         product.setName(name);
+        product.setBrand(brand);
         product.setPrice(price);
         product.setDescription(description);
         product.setCategory(category);
         product.setSellerId(sellerId);
+        product.setDiscount(discount);
+        product.setDiscountPrice(discountPrice);
         if(!isUpdateRequest){
             if(Objects.isNull(image)){
                 throw  new ResponseStatusException(HttpStatus.BAD_REQUEST,"Product image is missing!");

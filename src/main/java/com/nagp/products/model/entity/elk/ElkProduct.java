@@ -31,6 +31,10 @@ public class ElkProduct {
     private String category;
     private int quantity;
     private String sellerId;
+    @Field(type = FieldType.Keyword)
+    private String brand;
+    private double discountPrice;
+    private double discount;
 
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();

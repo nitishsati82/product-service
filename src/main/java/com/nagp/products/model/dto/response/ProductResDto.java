@@ -18,4 +18,7 @@ public class ProductResDto {
     private String category;
     private int quantity;
     private String sellerId;
+    private String brand;
+    private double discountPrice;
+    private double discount;
 }

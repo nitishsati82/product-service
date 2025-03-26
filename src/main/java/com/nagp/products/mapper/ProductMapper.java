@@ -22,6 +22,9 @@ public class ProductMapper {
         elkProduct.setCategory(product.getCategory());
         elkProduct.setQuantity(product.getQuantity());
         elkProduct.setSellerId(product.getSellerId());
+        elkProduct.setBrand(product.getBrand());
+        elkProduct.setDiscount(product.getDiscount());
+        elkProduct.setDiscountPrice(product.getDiscountPrice());
         return elkProduct;
     }
 
@@ -37,6 +40,9 @@ public class ProductMapper {
         product.setCategory(elkProduct.getCategory());
         product.setQuantity(elkProduct.getQuantity());
         product.setSellerId(elkProduct.getSellerId());
+        product.setBrand(elkProduct.getBrand());
+        product.setDiscount(elkProduct.getDiscount());
+        product.setDiscountPrice(elkProduct.getDiscountPrice());
         return product;
     }
 
@@ -52,6 +58,9 @@ public class ProductMapper {
         dto.setCategory(product.getCategory());
         dto.setQuantity(product.getQuantity());
         dto.setSellerId(product.getSellerId());
+        dto.setBrand(product.getBrand());
+        dto.setDiscount(product.getDiscount());
+        dto.setDiscountPrice(product.getDiscountPrice());
         return dto;
     }
 
@@ -67,6 +76,9 @@ public class ProductMapper {
         dto.setCategory(elkProduct.getCategory());
         dto.setQuantity(elkProduct.getQuantity());
         dto.setSellerId(elkProduct.getSellerId());
+        dto.setBrand(elkProduct.getBrand());
+        dto.setDiscount(elkProduct.getDiscount());
+        dto.setDiscountPrice(elkProduct.getDiscountPrice());
         return dto;
     }
 
@@ -82,6 +94,9 @@ public class ProductMapper {
         product.setCategory(dto.getCategory());
         product.setQuantity(dto.getQuantity());
         product.setSellerId(dto.getSellerId());
+        product.setBrand(dto.getBrand());
+        product.setDiscount(dto.getDiscount());
+        product.setDiscountPrice(dto.getDiscountPrice());
         return product;
     }
 
