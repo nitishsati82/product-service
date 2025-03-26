@@ -14,6 +14,7 @@ public class WebConfig {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.addAllowedOrigin("http://13.235.208.227:80");
         corsConfiguration.addAllowedOrigin("http://13.235.208.227");
+        corsConfiguration.addAllowedOrigin("https://13.235.208.227");
         corsConfiguration.addAllowedOrigin("http://localhost:3000");
         corsConfiguration.addAllowedOrigin("http://localhost:3001");
         corsConfiguration.addAllowedOrigin("http://localhost:8080");
