@@ -17,7 +17,7 @@ public class WebConfig {
         corsConfiguration.addAllowedOrigin("http://localhost:3000");
         corsConfiguration.addAllowedOrigin("http://localhost:3001");
         corsConfiguration.addAllowedOrigin("http://localhost:8080");
-        corsConfiguration.addAllowedOrigin("http://13.200.154.116:8089");
+        corsConfiguration.addAllowedOrigin("http://13.235.208.227:8089");
         corsConfiguration.addAllowedHeader("*"); // Allow all headers
         corsConfiguration.addAllowedMethod("*"); // Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
         corsConfiguration.setAllowCredentials(true); // Allow cookies if needed
