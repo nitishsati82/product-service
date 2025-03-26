@@ -14,7 +14,7 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://13.235.208.227","http://localhost:3000","http://localhost:8080","http://13.235.208.227:8089")
+                        .allowedOrigins("https://13.235.208.227","http://localhost:3000","http://localhost:8080","https://13.235.208.227:8089")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
